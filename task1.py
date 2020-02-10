@@ -24,14 +24,14 @@ def main(input_file_path, output_file_path):
     
     output['n_user'] = userRDD.count()
     #Task D
-    output['top10_user'] = userRDD.sortBy(lambda x: x[1], ascending=False).take(10)
+    output['top10_user'] = userRDD.sortByKey(ascending=True).sortBy(lambda x: x[1], ascending=False).take(10)
     #Task E
     
     businessRDD = jsonRDD.map(lambda x: (x['business_id'], 1)).reduceByKey(lambda a, b: a+b)
     
     output['n_business'] = businessRDD.count()
     #Task F
-    output['top10_business'] = businessRDD.sortBy(lambda x: x[1], ascending=False).take(10)
+    output['top10_business'] = businessRDD.sortByKey(ascending=True).sortBy(lambda x: x[1], ascending=False).take(10)
     
     with open(output_file_path, 'wt') as f:
         f.write(json.dumps(output))
